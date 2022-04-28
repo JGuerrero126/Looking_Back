@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
   // be sure to include its associated Product data
   try {
     const tagData = await Tag.findAll({
-      include: [{ model: Product, as: "product_tag" }],
+      include: [{ model: Product, as: "Product_tags" }],
     });
 
     if (!tagData) {
@@ -25,7 +25,7 @@ router.get("/:id", async (req, res) => {
   // be sure to include its associated Product data
   try {
     const tagData = await Tag.findByPk(req.params.id, {
-      include: [{ model: Product, as: "product_tag" }],
+      include: [{ model: Product, as: "Product_tags" }],
     });
 
     if (!tagData) {
@@ -42,8 +42,9 @@ router.post("/", async (req, res) => {
   Tag.create(req.body)
     .then((tag) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
+      console.log(req.body.productIds);
       if (req.body.productIds.length) {
-        const productTagIdArr = req.body.productIds.map((tag_id) => {
+        const productTagIdArr = req.body.productIds.map((product_id) => {
           return {
             product_id,
             tag_id: tag.id,
